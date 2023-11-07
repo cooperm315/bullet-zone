@@ -93,12 +93,12 @@
           <driver-library value="" />
           <driver value="" />
           <url-type value="DATABASE" />
-          <host value="stman1.cs.unh.edu" />
-          <port value="3306" />
+          <host value="" />
+          <port value="" />
           <database value="cs6195" />
           <type value="USER_PASSWORD" />
-          <user value="mdp" />
-          <deprecated-pwd value="RHJhZzU2a2Vz" />
+          <user value="" />
+          <deprecated-pwd value="" />
         </database>
         <properties>
           <auto-commit value="false" />
