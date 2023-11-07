@@ -1,0 +1,53 @@
+title Vehicle Entity Movement Enforcement Sequence
+
+participant Bullet Zone Rest Client
+participant Games Controller (REST API)
+participant Game Repository
+participant Vehicle Entity
+participant Movement Enforcer
+
+activate Bullet Zone Rest Client
+Bullet Zone Rest Client->>Games Controller (REST API): @Put("/{tankId}/move/{direction}")
+
+activate Games Controller (REST API)
+Games Controller (REST API)->>Game Repository:gameRepository.move()
+
+activate Game Repository
+activate Game Repository
+Game Repository-->Game Repository: game.getTanks().get(tankID)
+deactivateafter Game Repository
+
+opt                                                                                                                                                                                         [tank==null
+Game Repository-->Games Controller (REST API): throws TankDoesNotExistException()
+Games Controller (REST API)-->Bullet Zone Rest Client: throws TankDoesNotExistException()
+end
+
+Game Repository -> Vehicle Entity: move()
+activate Vehicle Entity
+
+Vehicle Entity->>Movement Enforcer: enforcer.checkValidMove()
+activate Movement Enforcer
+
+alt                                                                                                                                                                                     [meetsTimeConstraints() && isAllowedToMove()
+Movement Enforcer-->Vehicle Entity:Return True
+
+activate Vehicle Entity
+Vehicle Entity-->Vehicle Entity: Set new location to tank
+deactivateafter Vehicle Entity
+
+Vehicle Entity -->Game Repository:Return True
+
+Game Repository-->Games Controller (REST API): Return True
+else                                                                                                                                                                                                                                                           [else
+Movement Enforcer-->Vehicle Entity: Return False
+deactivate Movement Enforcer
+Vehicle Entity-->>Game Repository: Return False
+deactivate Vehicle Entity
+
+Game Repository-->Games Controller (REST API): Return False
+deactivate Game Repository
+end
+
+note over Games Controller (REST API):Returns HttpStatus.OK\nbecause no grid error will occur
+Games Controller (REST API)-->>Bullet Zone Rest Client: Return isSuccessfulMove\n&& HttpStatus.OK
+deactivateafter Games Controller (REST API)

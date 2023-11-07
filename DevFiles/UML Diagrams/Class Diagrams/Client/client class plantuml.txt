@@ -1,0 +1,184 @@
+@startuml
+package events {
+class BusProvider {
+-eventBus:Bus
++getEventBus():Bus
+}
+
+}
+
+
+
+package rest {
+class BZRestErrorhandler {
++onRestClientException(e:NestedRuntimeException)
+}
+
+class GridPollerTask {
++busProvider:BusProvider
++restClient:BulletZoneRestClient
++doPoll()
++onGridUpdate(gw:GridWrapper)
+}
+
+class GridUpdateEvent {
++gw:GridWrapper
+}
+
+/'
+class HttpLoggerInterceptor {
++intercept(req:HttpRequest, data:byte[], execution:ClientHttpRequestExecution):ClientHttpResponse
+}
+'/
+
+interface BulletZoneRestClient {
++setRootUrl(rootUrl:String)
++join():LongWrapper
++grid():GridWrapper
++register(username:String, password:String):BooleanWrapper
++move(tankId:long, direction:byte):BooleanWrapper
++turn(tankId:long, direction:byte):BooleanWrapper
++fire(tankId:long):BooleanWrapper
++leave(tankId:long):BooleanWrapper
+}
+
+}
+
+
+
+package ui {
+class GridAdapter {
+-monitor:Object
+#inflater:LayoutInflater
+-mEntities:int[][]
++updateList(entities:int[][])
++getCount():int
++getItem(position:int):Object
++getItemId(position:int):long
++getView(position:int, convertView:View, parent:ViewGroup):View
+}
+
+}
+
+
+
+package util {
+class BooleanWrapper {
+-result:boolean
+-name:String
++isResult():boolean
++setResult(result:boolean)
+}
+
+class GridWrapper {
+-grid:int[][]
+-timeStamp:long
++getGrid():int[][]
++setGrid(grid:int[][])
++getTimeStamp():long
++setTimeStamp(timeStamp:long)
+}
+
+class LongWrapper {
+-result:long
++getResult():long
++setResult(result:long)
+}
+
+/'
+class ResultWrapper {
+-result:T
++getResult():T
++setResult(result:T)
+}
+'/
+
+}
+
+package Model {
+class GameUser {
+-minerId:long
+-tankId:long
+-currId:long
+-activeHealth:int
+-direction:byte
++isMining:boolean
++addResource(terrain:int)
+}
+}
+
+
+'unpackaged
+class AuthenticateActivity {
++username_editText:EditText
++password_editText:EditText
++status_message:TextView
++controller:AuthenticationController
++userID:long
+#onCreate(savedInstanceState:Bundle)
+#afterViewInjection()
++afterInject()
+#onButtonRegister()
+#onButtonLogin()
+#setStatus(message:String)
+}
+
+class AuthenticationController {
++restClient:BulletZoneRestClient
++afterInject()
++login(username:String, password:String):long
++register(username:String, password:String):boolean
++initialize(restClientPassed:BulletZoneRestClient)
+}
+
+class ClientActivity {
+#mGridAdapter:GridAdapter
+#gridView:GridView
++busProvider:BusProvider
++gridPollTask:GridPollerTask
++restClient:BulletZoneRestClient
++bzRestErrorhandler:BZRestErrorhandler
+-tankId:long
+#onCreate(savedInstanceState:Bundle)
+#onDestroy()
+-gridEventHandler:Object
+#afterViewInjection()
++afterInject()
++joinAsync()
++updateGrid(gw:GridWrapper)
+#onButtonMove(view:View)
++moveAsync(tankId:long, direction:byte)
++turnAsync(tankId:long, direction:byte)
+#onButtonFire()
++leaveGame()
++login()
++leaveAsync(tankId:long)
+}
+
+/'
+class BulletZoneClientApp {
+}
+'/
+
+AuthenticateActivity "*" --> AuthenticationController
+
+AuthenticationController --|> BulletZoneRestClient
+
+ClientActivity --> GridAdapter
+ClientActivity "1" --* BusProvider
+ClientActivity --|> BulletZoneRestClient
+
+GridPollerTask *-- "*" BusProvider
+GridPollerTask --> GridUpdateEvent
+GridPollerTask --|> BulletZoneRestClient
+
+GridUpdateEvent --|> GridWrapper
+
+BulletZoneRestClient -- BZRestErrorhandler
+BulletZoneRestClient --|> GridWrapper
+BulletZoneRestClient --|> BooleanWrapper
+BulletZoneRestClient --|> LongWrapper
+
+GameUser --* ClientActivity
+GameUser --* GridAdapter
+@enduml

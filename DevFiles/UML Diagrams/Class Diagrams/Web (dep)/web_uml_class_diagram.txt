@@ -1,0 +1,110 @@
+@startuml
+package Util{
+    class GridWrapper{
+        - grid: int
+        - timestamp: long
+        + GridWrapper(int[][] grid)
+        + getGrid()
+        + setGrid(int[][] grid)
+        + getTimeStamp()
+        + setTimeStamp()
+    }
+
+    GridWrapper"1"--*DataRepository
+}
+
+package Web{
+    class AccountController {
+        -data:DataRepository
+        +register(name:String, password:String):ResponseEntity<BooleanWrapper>
+        +login(name:String, password:String):ResponseEntity<LongWrapper>
+    }
+
+    class CatalogController {
+        -data:DataRepository
+        +getCategories():ResponseEntity<StringArrayWrapper>
+        +getTypes(category:String):ResponseEntity<StringArrayWrapper>
+    }
+
+    class GamesController {
+        -gameRepository:GameRepository
+        +join(request:HttpServletRequest):ResponseEntity<LongWrapper>
+        +grid():ResponseEntity<GridWrapper>
+        +turn(tankId:long, direction:byte):ResponseEntity<BooleanWrapper>
+        +move(tankId:long, direction:byte):ResponseEntity<BooleanWrapper>
+        +fire(tankId:long):ResponseEntity<BooleanWrapper>
+        +fire(tankId:long, bulletType:int):ResponseEntity<BooleanWrapper>
+        +leave(tankId:long):HttpStatus
+        +handleBadRequest(e:Exception):String
+    }
+
+    AccountController *-- DataRepository
+    AccountController o-- BooleanWrapper
+    AccountController o-- StringArrayWrapper
+
+    CatalogController *-- DataRepository
+    CatalogController o-- BooleanWrapper
+    CatalogController o-- StringArrayWrapper
+
+    GamesController *-- GameRepository
+    GamesController o-- LongWrapper
+    GamesController o-- GridWrapper
+    GamesController o-- BooleanWrapper
+}
+
+package BulletZoneServer{
+    class BulletZoneServer{
+        SpringApplication.run(BulletZoneServer.class, args)
+    }
+
+    BulletZoneServer"1"--*GridWrapper
+}
+
+package Repository{
+    interface GameRepository{
+        join(String ip): Tank
+        getGrid(): int[][]
+        turn(long tankId, Direction direction): boolean
+        move(long tankId, Direction direction): boolean
+        fire(long tankId, int strength): boolean
+        leave(long tankId)
+    }
+
+    class InMemoryGameRepository{
+        <<interface>> GameRepository
+        + game: Game
+        + bulletDamage: int[]
+        + bulletDelay: int []
+        + trackActiveBullets: int[]
+        - join(String ip)
+        - turn(long tankId, Direction direction)
+        - move(long tankId, Direction direction)
+        - fire(long tankId, int bulletType)
+        - run() //inside fire function
+        - leave(long tankId)
+        - create()
+        + createFieldHolderGrid(Game game)
+    }
+    GameRepository"1"--*InMemoryGameRepository
+
+
+
+    class DataRepository {
+        + bzdata: BulletZoneData
+        DataRepository()
+        url: string
+        username: string
+        password: string
+        - validateUser(String username, String password, boolean create)
+    }
+
+    InMemoryGameRepository"1"--*DataRepository
+
+    class GameDoesnotExistException {
+        GameDoesNotExistException(int gameId)
+    }
+
+    DataRepository"1"--*GameDoesnotExistException
+}
+
+@enduml

@@ -1,0 +1,71 @@
+title Login Sequence
+
+actor User
+participant Authenticate Activity
+participant Authentication Controller
+participant Bullet Zone Rest Client
+participant Account Controller (REST API)
+participant Data Repository
+database Bullet Zone Data
+
+activate User
+
+User->Authenticate Activity: Inputs Credentials\ninto Activity
+
+activate Authenticate Activity
+Authenticate Activity->Authentication Controller: controller.login()
+
+activate Authentication Controller
+
+activate Authentication Controller
+Authentication Controller-->Authentication Controller:sanitizeInput()
+deactivateafter Authentication Controller
+
+opt                                                                                                                                             [!isClean
+Authentication Controller-->Authenticate Activity: Return\nINVALID_CHARS
+Authenticate Activity-->User: Prompt "Invalid Characters"
+end
+
+Authentication Controller->Bullet Zone Rest Client: restClient.login()
+
+activate Bullet Zone Rest Client
+Bullet Zone Rest Client->>Account Controller (REST API): @Put("/account/login/{username}/{password}")
+
+activate Account Controller (REST API)
+Account Controller (REST API)-->Data Repository: validateLogin()
+
+activate Data Repository
+Data Repository->Bullet Zone Data: Request Data
+
+activate Bullet Zone Data
+Bullet Zone Data-->>Data Repository: Return Data
+deactivate Bullet Zone Data
+
+Data Repository-->Account Controller (REST API): Return isValid
+deactivate Data Repository
+
+alt                                                                                                               [isValid
+Account Controller (REST API)-->>Bullet Zone Rest Client: Return HttpStatus.OK(200)
+
+else                                                                                                                 [else
+Account Controller (REST API)-->>Bullet Zone Rest Client: Return HttpStatus.UNAUTHORIZED(401)
+end
+deactivate Account Controller (REST API)
+
+Bullet Zone Rest Client-->Authentication Controller: Return HttpStatus
+deactivate Bullet Zone Rest Client
+
+alt                                                                                                                                            [result == 200
+Authentication Controller-->Authenticate Activity: Return userID
+Authenticate Activity-->User: <<create ClientActivity>>\n<<destroy LoginActivity>>\nDisplays Game
+else                                                                                                                                          [result == 401
+Authentication Controller-->Authenticate Activity: Return userID
+Authenticate Activity-->User: Prompt "Invalid Credentials"
+else                                                                                                                                                   [else
+Authentication Controller-->Authenticate Activity: Return -1
+deactivate Authentication Controller
+
+Authenticate Activity-->User: Prompt "Something went wrong"
+end
+deactivate Authenticate Activity
+

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AuthenticateActivity">
+
+    <TextView
+        android:id="@+id/login_title"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="Login"
+        android:textColor="@android:color/black"
+        android:textSize="40sp"
+        android:background="@android:color/holo_blue_dark"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <ImageView
+        android:layout_width="283dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/logo" />
+
+
+    <TextView
+        android:id="@+id/status_message"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:ems="16"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@android:color/holo_red_dark"
+        android:textStyle="bold" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <EditText
+        android:id="@+id/username_editText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:ems="11"
+        android:layout_gravity="center"
+        android:hint="Username:"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/password_editText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:ems="11"
+        android:hint="Password:"
+        android:inputType="textPersonName|textPassword" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="130dp"
+            android:layout_height="50dp"
+            android:text="Register"
+            android:background="@android:color/holo_blue_dark"
+            android:hapticFeedbackEnabled="true"
+            />
+
+        <Space
+            android:layout_height="match_parent"
+            android:layout_width="40dp" />
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="130dp"
+            android:layout_height="50dp"
+            android:text="Login"
+            android:background="@android:color/holo_blue_dark"
+            android:hapticFeedbackEnabled="true"
+            />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/bullet_zone_tm"/>
+
+</LinearLayout>

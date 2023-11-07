@@ -1,0 +1,198 @@
+@startuml
+!theme _none_
+
+package Web{
+    class GamesController {
+        -gameRepository:GameRepository
+        +join(request:HttpServletRequest):ResponseEntity<LongWrapper>
+        +grid():ResponseEntity<GridWrapper>
+        +turn(vehicleId:long, direction:byte):ResponseEntity<BooleanWrapper>
+        +move(vehicleId:long, direction:byte):ResponseEntity<BooleanWrapper>
+        +fire(vehicleId:long):ResponseEntity<BooleanWrapper>
+        +fire(vehicleId:long, bulletType:int):ResponseEntity<BooleanWrapper>
+        +leave(vehicleId:long):HttpStatus
+        +handleBadRequest(e:Exception):String
+    }
+
+    class CatalogController{
+        -log:Logger
+        -data:DataRepository
+        +getCategories()
+        +getTypes(category:String)
+    }
+}
+
+package Repository{
+    class InMemoryGameRepository{
+        <<interface>> GameRepository
+        + game: Game
+        + bulletDamage: int[]
+        + bulletDelay: int []
+        + trackActiveBullets: int[]
+
+        + getRandomEmptyFieldHolder():FieldHolder
+        - join(String ip)
+        - turn(long vehicleId, Direction direction)
+        - move(long vehicleId, Direction direction)
+        - fire(long vehicleId, int bulletType)
+        - run() //inside fire function
+        - leave(long vehicleId)
+        - create()
+        + createFieldHolderGrid(Game game)
+    }
+}
+
+package Model{
+    class Game {
+        -holderGrid:ArrayList<FieldHolder>
+        -vehicles:ConcurrentMap<Long, VehicleEntity>
+        -playersIP:ConcurrentMap<String, Long>
+        -playerInventories:ConcurrentMap<String, Inventory>
+        -monitor:Object
+        +addVehicleEntity(ip:String, vehicle:VehicleEntity)
+        +removeVehicleEntity(vehicleId:long)
+        +getGrid():List<Optional<FieldEntity>>
+        +getVehicleEntity(ip:String):VehicleEntity
+        +addResource(ip:String, resource:ResourceItem, amount:int)
+    }
+    Game *-- "*" FieldHolder
+    Game *-- "*" Inventory
+    Game *-- VehicleEntity
+
+    class Inventory{
+        -clay:int
+        -rock:int
+        -iron:int
+
+        +getResource(resource_id:int):int
+        +addResource(resource_id:int, amount:int)
+        +removeResource(resource_id:int, amount:int)
+    }
+
+    package Entities{
+
+        class Wall {
+            #destructValue:int
+            #pos:int
+            +copy():FieldEntity
+        }
+        Wall --|> StaticEntity
+
+        class Bullet {
+            -vehicleId:long
+            -direction:Direction
+            -damage:int
+            -bulletId:int
+
+            +copy():FieldEntity
+            +setVehicleEntityId(vehicleId:long)
+            +setDirection(direction:Direction)
+            +setDamage(damage:int)
+            +setBulletId(bulletId:int)
+            ' all getters and setters omitted simply reference itself
+        }
+        Bullet --|> MovableEntity
+
+        abstract class FieldEntity {
+            #parent:FieldHolder
+            +health:int
+
+            +hit(damage:int)
+        }
+        class StaticEntity{}
+        StaticEntity --|> FieldEntity
+
+        abstract class MovableEntity {
+            #game:Game
+            #direction:Direction
+
+            +collide(other:FieldEntity)
+            +isColliding(direction:Direction):boolean
+            +move(direction:Direction):boolean
+            +turn(direction:Direction):boolean
+        }
+        MovableEntity --|> FieldEntity
+
+        abstract class VehicleEntity {
+            -id:long
+            -ip:String
+            -lastMoveTime:long
+            -allowedMoveInterval:int
+            -lastFireTime:long
+            -allowedFireInterval:int
+            -numberOfBullets:int
+            -allowedNumberOfBullets:int
+            -life:int
+            -direction:Direction
+
+            +hit(damage:int)
+            +copy():FieldEntity
+        }
+        VehicleEntity --|> MovableEntity
+
+        class Tank{
+            -ip:String
+        }
+        Tank --|> VehicleEntity
+
+        class Miner{
+            -ip:String
+            +mine(terrainId:long)
+        }
+        Miner --|> VehicleEntity
+
+        abstract class Item{
+            #value:int
+            #id:int
+        }
+        Item --|> FieldEntity
+
+        class ResourceItem{
+            -resourceTypes:String[]
+        }
+        ResourceItem --|> Item
+
+        class CoinItem{
+            -coinItemTypes:String[]
+            -values:int[]
+        }
+        CoinItem --|> Item
+    }
+
+    class FieldHolder {
+        -neighbors:Map<Direction, FieldHolder>
+        -entityHolder:Optional<FieldEntity>
+        +addNeighbor(direction:Direction, fieldHolder:FieldHolder)
+        +isPresent():boolean
+        +setFieldEntity(entity:FieldEntity)
+        +clearField()
+    }
+    FieldHolder *-- "*" FieldEntity
+}
+
+package Client{
+    class ClientActivity{
+        - vehicleID:long
+        #mGridAdapter:GridAdapter
+        #gridView:GridView
+
+        #joinAsync()
+        #onButtonMove(view:View)
+        #moveAsync()
+        #turnAsync()
+        #onButtonFire()
+        #leaveGame()
+        #login()
+        #leaveAsync()
+    }
+}
+
+InMemoryGameRepository *-- "*" Game
+
+ClientActivity --> GamesController
+ClientActivity --> CatalogController
+CatalogController *-- DataRepository
+
+GamesController *-- "1"InMemoryGameRepository
+
+@enduml

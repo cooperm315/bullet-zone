@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Selectable Grid Exporter</title>
+</head>
+
+<body>
+    <canvas id="grid" width="400" height="400"></canvas>
+    <div>
+        <!--Have 5 different buttons (only one allowed at a time) that set the next click to the id-->
+        <input type="radio" id="grass" name="color" value="grass" checked>
+        <label for="grass">Grass</label>
+        <input type="radio" id="water" name="color" value="water">
+        <label for="water">Water</label>
+        <input type="radio" id="wall" name="color" value="wall">
+        <label for="wall">Wall</label>
+        <input type="radio" id="block3" name="color" value="block3">
+        <label for="block3">Block 3</label>
+        <input type="radio" id="block4" name="color" value="block4">
+        <label for="block4">Block 4</label>
+        <input type="radio" id="block5" name="color" value="block5">
+        <label for="block5">Block 5</label>
+
+        <!--Slider for health-->
+        <br>
+        <label for="health">Health</label>
+        <br>
+        <input type="range" id="health" name="health" min="0" max="100" value="50">
+        <button id="export-button">Export</button>
+    </div>
+    <script>
+        const canvas = document.getElementById("grid");
+        const ctx = canvas.getContext("2d");
+        const rows = 16;
+        const cols = 16;
+        const cellSize = canvas.width / cols;
+
+        let grid = new Array(rows);
+        for (let i = 0; i < rows; i++) {
+            grid[i] = new Array(cols).fill(0);
+        }
+
+        const blockTypes = ["grass", "water", "wall", "block3", "block4", "block5"];
+        let selectedBlockType = blockTypes[0];
+
+        // get all the radio buttons with name 'color'
+        const colorButtons = document.getElementsByName("color");
+
+        // loop through each button
+        for (let i = 0; i < colorButtons.length; i++) {
+            // and attach our click listener for this button
+            colorButtons[i].addEventListener("click", function () {
+                selectedBlockType = this.value;
+            });
+        }
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    switch (grid[i][j]) {
+                        case 0:
+                            ctx.fillStyle = "#4f4";
+                            break;
+                        case 1:
+                            ctx.fillStyle = "#0df";
+                            break;
+                        case 2:
+                            ctx.fillStyle = "#f44";
+                            break;
+                        case 3:
+                            ctx.fillStyle = "#0f0";
+                            break;
+                        case 4:
+                            ctx.fillStyle = "#00f";
+                            break;
+                        case 5:
+                            ctx.fillStyle = "#ff0";
+                            break;
+                        default:
+                            ctx.fillStyle = "#fff";
+                            break;
+                    }
+                    ctx.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
+                    ctx.strokeRect(j * cellSize, i * cellSize, cellSize, cellSize);
+                }
+            }
+        }
+
+        canvas.addEventListener("mousedown", function (e) {
+            const row = Math.floor(e.clientY / cellSize);
+            const col = Math.floor(e.clientX / cellSize);
+            if (row >= 0 && row < rows && col >= 0 && col < cols) {
+                grid[row][col] = blockTypes.indexOf(selectedBlockType);
+                drawGrid();
+            }
+        });
+
+        canvas.addEventListener("mousemove", function (e) {
+            const row = Math.floor(e.clientY / cellSize);
+            const col = Math.floor(e.clientX / cellSize);
+            if (row >= 0 && row < rows && col >= 0 && col < cols) {
+                if (e.buttons === 1) {
+                    grid[row][col] = blockTypes.indexOf(selectedBlockType);
+                    drawGrid();
+                }
+            }
+        });
+
+        // document.getElementById("export-button").addEventListener("click", function () {
+        //     const data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(grid));
+        //     const link = document.createElement("a");
+        //     link.download = "map.json";
+        //     link.href = data;
+        //     document.body.appendChild(link);
+        //     link.click();
+        //     document.body.removeChild(link);
+        // });
+
+        document.getElementById("export-button").addEventListener("click", function () {
+            //export as csv all on one line
+            let csv = "";
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    csv += grid[i][j];
+                    if (i * cols + j < rows * cols - 1) {
+                        csv += ",";
+                    }
+                }
+            }
+            // download the csv
+            const link = document.createElement("a");
+            link.download = "map.csv";
+            link.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+        });
+
+        drawGrid();
+    </script>
+</body>
+
+</html>

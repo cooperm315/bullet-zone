@@ -1,0 +1,43 @@
+title Vehicle Terrain Interaction Sequence
+
+participant Bullet Zone Rest Client
+participant Games Controller (REST API)
+participant Game Repository
+participant Field Entity
+participant Field Holder
+
+activate Bullet Zone Rest Client
+Bullet Zone Rest Client->>Games Controller (REST API): @Put("/{tankId}/move/{direction}")
+
+activate Games Controller (REST API)
+Games Controller (REST API)->>Game Repository:gameRepository.move()
+
+activate Game Repository
+activate Game Repository
+Game Repository-->Game Repository: game.getTanks().get(tankID)
+deactivateafter Game Repository
+
+opt                                                                                                                                                                                         [tank==null
+Game Repository-->Games Controller (REST API): throws TankDoesNotExistException()
+Games Controller (REST API)-->Bullet Zone Rest Client: throws TankDoesNotExistException()
+end
+
+Game Repository -> Field Entity: move()
+activate Field Entity
+
+Field Entity ->Field Holder: getTerrainType().speedModifier
+activate Field Holder
+
+
+Field Holder -->Game Repository:Return speedModifier
+
+Game Repository-->Games Controller (REST API): Return True
+
+deactivate Field Holder
+deactivate Field Entity
+
+deactivate Game Repository
+
+note over Games Controller (REST API):Returns HttpStatus.OK\nbecause no grid error will occur
+Games Controller (REST API)-->>Bullet Zone Rest Client: Return isSuccessfulMove\n&& HttpStatus.OK
+deactivateafter Games Controller (REST API)

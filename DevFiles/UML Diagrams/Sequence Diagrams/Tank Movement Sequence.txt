@@ -1,0 +1,47 @@
+title Tank Movement Sequence
+
+actor User
+participant Client Activity
+participant GridAdapter
+
+participant Client Controller
+participant Bullet Zone Rest Client
+participant Games Controller (REST API)
+
+
+activate User
+User->Client Activity:Presses button to\nmove\n(moveAsync)
+
+activate Client Activity
+Client Activity->Client Controller: move()
+
+activate Client Controller
+Client Controller->Bullet Zone Rest Client: restClient.move()
+deactivateafter Client Controller
+
+activate Bullet Zone Rest Client
+Bullet Zone Rest Client->>Games Controller (REST API): @Put("/{tankId}/move/{direction}")
+
+activate Games Controller (REST API)
+note right of Games Controller (REST API):Refer to:\nTank Movement Enforcement Sequence
+
+Games Controller (REST API)-->>Bullet Zone Rest Client: Return HttpStatus.OK
+deactivateafter Bullet Zone Rest Client
+
+deactivate Games Controller (REST API)
+
+note right of Client Activity:Refer to:\nPoller Get Board Sequence
+
+activate Client Activity
+Client Activity-->Client Activity: @Subscribe\nupdateGrid();
+deactivateafter Client Activity
+
+Client Activity->GridAdapter:mGridAdapter.updateList(gw.getGrid());
+activate GridAdapter
+activate GridAdapter
+GridAdapter-->GridAdapter:notifyDataSetChanged()
+deactivateafter GridAdapter
+
+Client Activity-->>User: Displays Updated Grid
+deactivateafter Client Activity
+deactivate GridAdapter

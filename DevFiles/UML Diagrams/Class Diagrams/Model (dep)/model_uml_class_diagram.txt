@@ -1,0 +1,116 @@
+@startuml
+package Model{
+    enum Direction {
+        Up
+        Down
+        Left
+        Right
+        +fromByte(directionByte:byte):Direction
+        +toByte(direction:Direction)
+    }
+
+    class Bullet {
+        -tankId:long
+        -direction:Direction
+        -damage:int
+        -bulletId:int
+        +copy():FieldEntity
+        +setTankId(tankId:long)
+        +setDirection(direction:Direction)
+        +setDamage(damge:int)
+        +setBulletId(bulletId:int)
+        ' all getters and setters omitted simply reference itself
+    }
+
+    class FieldEntity {
+        #parent:FieldHolder
+        +hit(damage:int)
+    }
+
+    class FieldHolder {
+        -neighbors:Map<Direction, FieldHolder>
+        -entityHolder:Optional<FieldEntity>
+        +addNeighbor(direction:Direction, fildHolder:FieldHolder)
+        +isPresent():boolean
+        +setFieldEntity(entity:FieldEntity)
+        +clearField()
+    }
+
+    class Game {
+        -holderGrid:ArrayList<FieldHolder>
+        -tanks:ConcurrentMap<Long, Tank>
+        -playersIP:ConcurrentMap<String, Long>
+        -monitor:Object
+        +addTank(ip:String, tank:Tank)
+        +removeTank(tankId:long)
+        +getGrid():List<Optional<FieldEntity>>
+        +getTank(ip:String):Tank
+    }
+
+    class IllegalTransitionException {}
+
+    class LimitExceededException {}
+
+    class NumberField {
+        -value:int
+        +copy():FieldEntity
+    }
+
+    class PlayerAlreadyExistsException {}
+
+    class PlayerDoesNotExistException {}
+
+    class Tank {
+        -id:long
+        -ip:String
+        -lastMoveTime:long
+        -allowedMoveInterval:int
+        -lastFireTime:long
+        -allowedFireInterval:int
+        -numberOfBullets:int
+        -allowedNumberOfBullets:int
+        -life:int
+        -direction:Direction
+        +hit(damage:int)
+        +copy():FieldEntity
+        +setLastMoveTime(lastMoveTime:long)
+        +setAllowedMoveInterval(allowedMoveInterval:int)
+        +setLastFireTime(lastFireTime:long)
+        +setAllowedFireInterval(allowedFireInterval:int)
+        +setNumberOfBullets(numberOfBullets:int)
+        +setAllowedNumberOfBullets(allowedNumberOfBullets:int)
+        +setDirection(direction:Direction)
+        +setLife(life:int)
+    }
+
+    class TankDoesNotExistException {}
+
+    class Wall {
+        #destructValue:int
+        #pos:int
+        +copy():FieldEntity
+    }
+
+    Game *-- FieldHolder
+    Game *-- Tank
+    Game o-- "*" FieldEntity
+    Game o-- TankDoesNotExistException
+    Game o-- LimitExceededException
+    Game o-- PlayerAlreadyExistsException
+    Game o-- PlayerDoesNotExistException
+
+    Tank o-- "1" FieldEntity
+    Tank *-- Direction
+    Tank o-- IllegalTransitionException
+
+    Bullet o-- "1" FieldEntity
+    Bullet *-- Direction
+    Bullet o-- TankDoesNotExistException
+
+    FieldHolder *-- FieldEntity
+
+    Wall o-- "1" FieldEntity
+
+    NumberField o-- FieldEntity
+}
+@enduml

@@ -1,0 +1,232 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".ClientActivity">
+
+
+
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="540dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#FFFFFF"
+        android:numColumns="16"
+        android:padding="0dp"
+        android:layout_margin="0dp"
+        android:layout_gravity="center"></GridView>
+
+    <RelativeLayout
+        android:id="@+id/LinearLayoutControl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <ImageButton
+            android:id="@+id/buttonDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:hapticFeedbackEnabled="true"
+            android:backgroundTint="@android:color/holo_blue_bright"
+            android:text="@string/down"
+            android:src="@drawable/move_down"
+            />
+
+        <ImageButton
+            android:id="@+id/buttonUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/buttonDown"
+            android:layout_alignLeft="@+id/buttonDown"
+            android:layout_alignRight="@+id/buttonDown"
+            android:src="@drawable/move_up"
+            android:backgroundTint="@android:color/holo_blue_bright"
+            android:text="@string/up"
+            android:hapticFeedbackEnabled="true"/>
+
+        <ImageButton
+            android:id="@+id/buttonLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/buttonDown"
+            android:src="@drawable/move_left"
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:hapticFeedbackEnabled="true"/>
+
+        <ImageButton
+            android:id="@+id/buttonRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/buttonDown"
+            android:src="@drawable/move_right"
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:hapticFeedbackEnabled="true"/>
+
+        <ImageButton
+            android:id="@+id/buttonFire"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/buttonUp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/buttonRight"
+            android:text="@string/fire"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:src="@drawable/bullet2"
+            android:hapticFeedbackEnabled="true"/>
+
+        <ImageButton
+            android:id="@+id/buttonMine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/buttonUp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/buttonRight"
+            android:layout_above="@id/buttonUp"
+            android:layout_below="@id/buttonFire"
+            android:text="mine"
+            android:backgroundTint="@android:color/holo_orange_light"
+            android:src="@drawable/shovel"
+            android:scaleType="fitCenter"
+            android:hapticFeedbackEnabled="true"
+            />
+
+        <ImageButton
+            android:id="@+id/buttonBuild"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/buttonLeft"
+            android:layout_centerVertical="true"
+            android:layout_alignEnd="@+id/buttonLeft"
+            android:layout_above="@id/buttonUp"
+            android:layout_below="@id/buttonFire"
+            android:text="build"
+            android:backgroundTint="@android:color/holo_orange_light"
+            android:src="@drawable/icon_build"
+            android:scaleType="fitCenter"
+            android:hapticFeedbackEnabled="true"
+            />
+
+        <ImageButton
+            android:id="@+id/buttonDismantle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/buttonRight"
+            android:layout_centerVertical="true"
+            android:layout_alignEnd="@id/buttonRight"
+            android:layout_above="@id/buttonUp"
+            android:layout_below="@id/buttonFire"
+            android:text="dismantle"
+            android:backgroundTint="@android:color/holo_orange_light"
+            android:src="@drawable/icon_dismantle"
+            android:scaleType="fitCenter"
+            android:hapticFeedbackEnabled="true"
+            />
+
+
+        <ImageButton
+            android:id="@+id/buttonEject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/buttonFire"
+            android:layout_alignRight="@id/buttonDismantle"
+            android:layout_alignTop="@id/buttonFire"
+            android:layout_alignBottom="@id/buttonFire"
+            android:backgroundTint="@android:color/holo_orange_light"
+            android:src="@drawable/eject"
+            android:scaleType="fitCenter"
+            android:hapticFeedbackEnabled="true"
+            />
+
+        <Button
+            android:id="@+id/buttonReplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:backgroundTint="@android:color/holo_blue_dark"
+            android:hapticFeedbackEnabled="true"
+            android:text="DevRes" />
+
+        <TextView
+            android:id="@+id/tankInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/buttonLeft"
+            android:layout_alignEnd="@id/buttonRight"
+            android:layout_alignTop="@id/buttonReplay"
+            android:textAlignment="center"
+            android:text="Unit: Health: "
+            android:textSize="18dp"
+            />
+
+
+        <Button
+            android:id="@+id/buttonLeave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="Leave"
+            android:backgroundTint="@android:color/holo_blue_dark"
+            android:hapticFeedbackEnabled="true"/>
+
+        <ImageButton
+            android:id="@+id/buttonSelectTank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/buttonReplay"
+            android:layout_alignEnd="@id/buttonReplay"
+            android:layout_below="@id/buttonReplay"
+            android:layout_above="@id/buttonFire"
+            android:text="tank"
+            android:backgroundTint="@android:color/holo_blue_bright"
+            android:src="@drawable/blue_tank_up"
+            android:scaleType="fitCenter"
+            android:hapticFeedbackEnabled="true"
+            />
+        <ImageButton
+            android:id="@+id/buttonSelectBuilder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/buttonSelectTank"
+            android:layout_alignEnd="@id/buttonSelectTank"
+            android:layout_above="@id/buttonUp"
+            android:layout_below="@id/buttonSelectTank"
+            android:text="builder"
+            android:backgroundTint="@android:color/holo_blue_bright"
+            android:src="@drawable/player_builder0"
+            android:scaleType="fitCenter"
+            android:hapticFeedbackEnabled="true"/>
+
+        <ImageButton
+            android:id="@+id/buttonSelectMiner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/buttonLeave"
+            android:layout_alignEnd="@id/buttonLeave"
+            android:layout_below="@id/buttonLeave"
+            android:layout_above="@id/buttonFire"
+            android:text="miner"
+            android:backgroundTint="@android:color/holo_blue_bright"
+            android:src="@drawable/blue_miner_up"
+            android:scaleType="fitCenter"
+
+            android:hapticFeedbackEnabled="true"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>

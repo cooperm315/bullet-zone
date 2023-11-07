@@ -1,0 +1,66 @@
+@startuml
+skinparam linetype polyline
+
+class "User Input" {
+}
+"User Input" --> Vehicle : controls (moves & fires) >
+
+class Player {
+    player id
+    name
+    account
+    resources
+}
+Player --> Vehicle : owns >
+
+class Bullet {
+    vehicle id
+    damage
+    position
+}
+Bullet --> Vehicle : damages >
+
+class Wall {
+    health
+    position
+}
+
+class Item{
+    type
+    value
+}
+
+class Vehicle {
+    id
+    direction
+    speed
+    bullet type
+    health
+}
+
+Vehicle --> Wall : blocked by >
+Vehicle --> Bullet : shoots >
+Vehicle --> "Grid Map" : moves on >
+Vehicle --> Holder : moves to >
+
+
+
+class "Grid Map" {
+    rows
+    cols
+}
+"Grid Map" --> Holder : contains many >
+
+class Holder {
+    terrain type
+    position
+}
+Holder --> Bullet : can contain >
+Holder --> Item : can contain >
+Holder --> Wall : can contain >
+Holder --> Vehicle : can contain >
+
+
+
+
+@enduml

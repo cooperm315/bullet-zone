@@ -1,0 +1,32 @@
+title Poller Get Board Sequence
+
+participant Subscribers
+participant Event Bus
+participant Grid Poller Task
+participant Bullet Zone Rest Client
+participant Games Controller (REST API)
+
+activate Grid Poller Task
+note left of Grid Poller Task:onGridUpdate()
+
+Grid Poller Task->Bullet Zone Rest Client: onGridUpdate(restClient.grid())
+
+activate Bullet Zone Rest Client
+Bullet Zone Rest Client->>Games Controller (REST API): @Get(\"\")
+
+activate Games Controller (REST API)
+Games Controller (REST API)-->>Bullet Zone Rest Client: Return GridWrapper
+deactivate Games Controller (REST API)
+
+Bullet Zone Rest Client-->Grid Poller Task: Return GridWrapper
+deactivate Bullet Zone Rest Client
+
+Grid Poller Task-->Event Bus:<<create GridUpdateEvent>>\nReturn new GridUpdateEvent
+deactivate Grid Poller Task
+
+activate Event Bus
+activate Subscribers
+Event Bus-->>Subscribers: busProvider.getEventBus().post(new GridUpdateEvent(gw))
+deactivate Event Bus
+
+deactivateafter Subscribers

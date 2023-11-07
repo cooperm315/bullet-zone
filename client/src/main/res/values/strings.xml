@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BulletZone</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="up">&#x2191;</string>
+    <string name="down">&#x2193;</string>
+    <string name="right">&#x21B7;</string>
+    <string name="left">&#x21B6;</string>
+    <string name="fire">FIRE</string>
+    <string name="join">JOIN</string>
+    <string name="leave">LEAVE</string>
+
+    <string name="title_activity_my">BulletZone</string>
+
+    <string name="bullet">&#x1F52A;</string>
+    <string name="wall">&#x1F9F1;</string>
+
+    <string name="tankUp">&#x23EB;</string>
+    <string name="tankDown">&#x23EC;</string>
+    <string name="tankLeft">&#x23EA;</string>
+    <string name="tankRight">&#x23E9;</string>
+
+    <string name="playerTankUp">&#x1F53C;</string>
+    <string name="playerTankDown">&#x1F53D;</string>
+    <string name="playerTankLeft">&#x25C0;</string>
+    <string name="playerTankRight">&#x25B9;</string>
+
+</resources>

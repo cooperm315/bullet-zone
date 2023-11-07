@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ClientActivity">
+    <item android:id="@+id/pontoon"
+        android:title="Pontoon (1 Iron, 5 Wood)"
+        android:icon="@drawable/pontoon"/>
+
+    <item android:id="@+id/road"
+        android:title="Road (3 Clay)"
+        android:icon="@drawable/road_no_lines"/>
+
+    <item android:id="@+id/wood_wall"
+        android:title="Wood Wall (1 Clay, 2 Rock)"
+        android:icon="@drawable/wood_wall"/>
+
+    <item android:id="@+id/brick_wall"
+        android:title="Brick Wall (3 Clay, 3 Rock, 3 Iron)"
+        android:icon="@drawable/brick_wall"/>
+</menu>
